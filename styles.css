@@ -1,4 +1,4 @@
-/* ===== CSS Variables ===== */
+/* ===== CSS Variables (Dark Mode - Default) ===== */
 :root {
     --primary-color: #8b5cf6;
     --primary-dark: #7c3aed;
@@ -24,6 +24,28 @@
     --transition: all 0.3s ease;
 }
 
+/* ===== Light Mode Variables ===== */
+[data-theme="light"] {
+    --primary-color: #7c3aed;
+    --primary-dark: #6d28d9;
+    --secondary-color: #0891b2;
+    --accent-color: #06b6d4;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-light: #64748b;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-dark: #f1f5f9;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --glow-primary: 0 0 20px rgba(124, 58, 237, 0.2);
+    --glow-secondary: 0 0 20px rgba(8, 145, 178, 0.2);
+}
+
 /* ===== Reset & Base Styles ===== */
 * {
     margin: 0;
@@ -37,10 +59,36 @@ html {
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #000000;
+    background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode body */
+[data-theme="light"] body {
+    background-color: #ffffff;
+}
+
+/* ===== 3D Canvas Backgrounds ===== */
+.section-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+section {
+    position: relative;
+}
+
+section .container {
+    position: relative;
+    z-index: 1;
 }
 
 a {
@@ -214,29 +262,6 @@ img {
     background: #000000;
     position: relative;
     overflow: hidden;
-}
-
-/* ===== 3D Section Canvas ===== */
-.section-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.skills,
-.projects {
-    position: relative;
-    overflow: hidden;
-}
-
-.skills .container,
-.projects .container {
-    position: relative;
-    z-index: 1;
 }
 
 .hero-content {
@@ -1239,57 +1264,326 @@ section {
     }
 }
 
-/* ===== Dark Mode Variables ===== */
-[data-theme="dark"] {
-    --primary-color: #a78bfa;
-    --primary-dark: #8b5cf6;
-    --secondary-color: #22d3ee;
-    --accent-color: #34d399;
-    --text-primary: #f8fafc;
-    --text-secondary: #e2e8f0;
-    --text-light: #cbd5e1;
-    --bg-primary: #030305;
-    --bg-secondary: #0a0a0f;
-    --bg-dark: #000000;
-    --bg-card: #0f0f15;
-    --border-color: #1e1e28;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.6), 0 2px 4px -2px rgb(0 0 0 / 0.5);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+/* ===== Light Mode Specific Styles ===== */
+[data-theme="light"] .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
 }
 
-[data-theme="dark"] .navbar {
-    background: rgba(3, 3, 5, 0.95);
-    border-bottom-color: var(--border-color);
+[data-theme="light"] .hero {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
 }
 
-[data-theme="dark"] .hero {
-    background: linear-gradient(135deg, #030305 0%, #0a0510 50%, #050510 100%);
+[data-theme="light"] .hero::before {
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
 }
 
-[data-theme="dark"] .hero::before {
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+[data-theme="light"] .hero-name {
+    color: var(--text-primary);
 }
 
-[data-theme="dark"] .hero-socials a,
-[data-theme="dark"] .scroll-indicator a {
+[data-theme="light"] .hero-title {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .hero-description {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .hero-socials a,
+[data-theme="light"] .scroll-indicator a {
+    background: var(--bg-card);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .skill-group {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .project-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .project-tech span {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .timeline-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .education-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .cert-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .contact-form {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .contact-form input,
+[data-theme="light"] .contact-form textarea {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .contact-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .hamburger,
+[data-theme="light"] .hamburger::before,
+[data-theme="light"] .hamburger::after {
+    background: var(--text-primary);
+}
+
+[data-theme="light"] .footer {
+    background: #f1f5f9;
+    border-top: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .footer-logo span {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .footer-socials a {
+    background: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .footer-copyright {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .btn-outline {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+[data-theme="light"] .btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+[data-theme="light"] .tech-marquee {
     background: var(--bg-secondary);
 }
 
-[data-theme="dark"] .skill-tags span {
-    background: var(--bg-primary);
+[data-theme="light"] .section-canvas {
+    opacity: 0.7;
+    filter: invert(1) hue-rotate(180deg);
+}
+
+[data-theme="light"] .hero-avatar-img {
     border-color: var(--border-color);
 }
 
-[data-theme="dark"] .project-tech span {
-    background: var(--bg-primary);
+/* Light mode - Section backgrounds */
+[data-theme="light"] .about,
+[data-theme="light"] .skills,
+[data-theme="light"] .projects,
+[data-theme="light"] .experience,
+[data-theme="light"] .education,
+[data-theme="light"] .contact {
+    background: #ffffff;
 }
 
-[data-theme="dark"] .hamburger,
-[data-theme="dark"] .hamburger::before,
-[data-theme="dark"] .hamburger::after {
-    background: var(--text-primary);
+/* Light mode - Section titles */
+[data-theme="light"] .section-title {
+    color: var(--text-primary);
+}
+
+/* Light mode - About section */
+[data-theme="light"] .about-text p {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .about-text strong {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .info-item {
+    color: var(--text-secondary);
+}
+
+/* Light mode - Skill groups */
+[data-theme="light"] .skill-group {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    padding: 1.5rem;
+    border-radius: 1rem;
+}
+
+[data-theme="light"] .skill-group-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .skill-list {
+    color: var(--text-secondary);
+}
+
+/* Light mode - Timeline items */
+[data-theme="light"] .timeline::before {
+    background: var(--border-color);
+}
+
+[data-theme="light"] .timeline-dot {
+    border-color: var(--bg-primary);
+}
+
+[data-theme="light"] .timeline-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .timeline-header h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .timeline-company {
+    color: var(--primary-color);
+}
+
+[data-theme="light"] .timeline-date {
+    color: var(--text-light);
+}
+
+[data-theme="light"] .timeline-content li {
+    color: var(--text-secondary);
+}
+
+/* Light mode - Education cards */
+[data-theme="light"] .education-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .education-card h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .education-card p {
+    color: var(--text-secondary);
+}
+
+/* Light mode - Certification items */
+[data-theme="light"] .cert-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .cert-item h4 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .cert-item p {
+    color: var(--text-secondary);
+}
+
+/* Light mode - Contact section */
+[data-theme="light"] .contact-info h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .contact-text {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .contact-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .contact-item h4 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .contact-item p,
+[data-theme="light"] .contact-item a {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .contact-form {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .contact-form h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .contact-form label {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .contact-form input,
+[data-theme="light"] .contact-form textarea {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .contact-form input::placeholder,
+[data-theme="light"] .contact-form textarea::placeholder {
+    color: var(--text-light);
+}
+
+/* Light mode - Stat cards */
+[data-theme="light"] .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .stat-label {
+    color: var(--text-secondary);
+}
+
+/* Light mode - Project cards */
+[data-theme="light"] .project-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .project-card h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .project-card p {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .project-tech span {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
 }
 
 /* ===== Theme Toggle Button ===== */
@@ -1462,6 +1756,16 @@ section {
     }
 }
 
+/* Bouncy Float Animation */
+@keyframes floatBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-30px);
+    }
+}
+
 /* Pulse Glow Animation */
 @keyframes pulseGlow {
     0%, 100% {
@@ -1584,13 +1888,30 @@ section {
 }
 
 .hero-avatar-img {
-    animation: float 6s ease-in-out infinite;
+    animation: floatBounce 3s ease-in-out infinite;
     transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
 .hero-avatar-img:hover {
     transform: scale(1.05) translateY(-10px);
     box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.4);
+}
+
+/* Role Text Typewriter Animation */
+.role-text {
+    display: inline;
+    border-right: 3px solid var(--primary-color);
+    padding-right: 5px;
+    animation: blink-cursor 0.7s step-end infinite;
+}
+
+@keyframes blink-cursor {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--primary-color); }
+}
+
+.role-cursor {
+    display: none;
 }
 
 /* ===== Section Title Animation ===== */
