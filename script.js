@@ -7,6 +7,99 @@ const contactForm = document.getElementById('contactForm');
 const themeToggle = document.getElementById('themeToggle');
 const backToTopBtn = document.getElementById('backToTop');
 
+// ===== Custom Cursor =====
+const cursor = document.querySelector('.custom-cursor');
+const follower = document.querySelector('.cursor-follower');
+
+if (cursor && follower) {
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    let followerX = 0, followerY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    
+    function animateCursor() {
+        // Smooth cursor movement
+        cursorX += (mouseX - cursorX) * 0.2;
+        cursorY += (mouseY - cursorY) * 0.2;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        
+        // Slower follower
+        followerX += (mouseX - followerX) * 0.1;
+        followerY += (mouseY - followerY) * 0.1;
+        follower.style.left = followerX + 'px';
+        follower.style.top = followerY + 'px';
+        
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    
+    // Hover effects on interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .btn, .project-card, .skill-group, .nav-link, input, textarea');
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.classList.add('hover');
+            follower.classList.add('hover');
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.classList.remove('hover');
+            follower.classList.remove('hover');
+        });
+    });
+    
+    // Click effect
+    document.addEventListener('mousedown', () => {
+        cursor.classList.add('clicking');
+        follower.classList.add('clicking');
+    });
+    document.addEventListener('mouseup', () => {
+        cursor.classList.remove('clicking');
+        follower.classList.remove('clicking');
+    });
+    
+    // Hide cursor when leaving window
+    document.addEventListener('mouseleave', () => {
+        cursor.style.opacity = '0';
+        follower.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => {
+        cursor.style.opacity = '1';
+        follower.style.opacity = '1';
+    });
+}
+
+// ===== Section Reveal Animations =====
+const revealSections = document.querySelectorAll('section');
+const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('section-reveal', 'revealed');
+            
+            // Animate children with stagger
+            const staggerChildren = entry.target.querySelectorAll('.stagger-children');
+            staggerChildren.forEach(parent => {
+                parent.classList.add('revealed');
+            });
+            
+            // Animate section titles
+            const title = entry.target.querySelector('.section-title');
+            if (title) {
+                title.style.opacity = '1';
+                title.style.transform = 'translateY(0)';
+            }
+        }
+    });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+revealSections.forEach(section => {
+    section.classList.add('section-reveal');
+    sectionObserver.observe(section);
+});
+
 // ===== Dark Mode Toggle =====
 function initTheme() {
     const savedTheme = localStorage.getItem('theme');
