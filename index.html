@@ -28,6 +28,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Arial' font-size='50' font-weight='bold' fill='white'>SD</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Arial' font-size='50' font-weight='bold' fill='white'>SD</text></svg>">
+    
+    <!-- Three.js for 3D Effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <meta name="theme-color" content="#6366f1">
     
     <link rel="stylesheet" href="styles.css">
@@ -61,12 +64,8 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <!-- Floating Shapes Background -->
-        <div class="floating-shapes">
-            <div class="floating-shape"></div>
-            <div class="floating-shape"></div>
-            <div class="floating-shape"></div>
-        </div>
+        <!-- 3D Background Canvas -->
+        <canvas id="hero-canvas"></canvas>
         
         <div class="hero-content">
             <div class="hero-text">
