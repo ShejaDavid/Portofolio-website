@@ -9,12 +9,9 @@ const backToTopBtn = document.getElementById('backToTop');
 
 // ===== Custom Cursor =====
 const cursor = document.querySelector('.custom-cursor');
-const follower = document.querySelector('.cursor-follower');
-
-if (cursor && follower) {
+if (cursor) {
     let mouseX = 0, mouseY = 0;
     let cursorX = 0, cursorY = 0;
-    let followerX = 0, followerY = 0;
     
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
@@ -22,83 +19,105 @@ if (cursor && follower) {
     });
     
     function animateCursor() {
-        // Smooth cursor movement
-        cursorX += (mouseX - cursorX) * 0.2;
-        cursorY += (mouseY - cursorY) * 0.2;
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
         cursor.style.left = cursorX + 'px';
         cursor.style.top = cursorY + 'px';
-        
-        // Slower follower
-        followerX += (mouseX - followerX) * 0.1;
-        followerY += (mouseY - followerY) * 0.1;
-        follower.style.left = followerX + 'px';
-        follower.style.top = followerY + 'px';
-        
         requestAnimationFrame(animateCursor);
     }
     animateCursor();
     
-    // Hover effects on interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .btn, .project-card, .skill-group, .nav-link, input, textarea');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('hover');
-            follower.classList.add('hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('hover');
-            follower.classList.remove('hover');
-        });
+    // Hover effect on interactive elements
+    document.querySelectorAll('a, button, .btn, .project-card, .skill-group, input, textarea').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
     
     // Click effect
-    document.addEventListener('mousedown', () => {
-        cursor.classList.add('clicking');
-        follower.classList.add('clicking');
-    });
-    document.addEventListener('mouseup', () => {
-        cursor.classList.remove('clicking');
-        follower.classList.remove('clicking');
+    document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
+    document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
+}
+
+// ===== BIG SCROLL ANIMATIONS - Repeat Every Time =====
+function initScrollAnimations() {
+    // Add animation classes to elements
+    document.querySelectorAll('.section-title').forEach(el => {
+        el.classList.add('scroll-animate', 'fade-up');
     });
     
-    // Hide cursor when leaving window
-    document.addEventListener('mouseleave', () => {
-        cursor.style.opacity = '0';
-        follower.style.opacity = '0';
+    document.querySelectorAll('.about-text').forEach(el => {
+        el.classList.add('scroll-animate', 'slide-left');
     });
-    document.addEventListener('mouseenter', () => {
-        cursor.style.opacity = '1';
-        follower.style.opacity = '1';
+    
+    document.querySelectorAll('.about-stats').forEach(el => {
+        el.classList.add('scroll-animate', 'slide-right');
+    });
+    
+    document.querySelectorAll('.skill-group').forEach((el, i) => {
+        el.classList.add('scroll-animate', 'scale-up');
+        el.classList.add('stagger-delay-' + ((i % 6) + 1));
+    });
+    
+    document.querySelectorAll('.project-card').forEach((el, i) => {
+        el.classList.add('scroll-animate', 'flip-in');
+        el.classList.add('stagger-delay-' + ((i % 4) + 1));
+    });
+    
+    document.querySelectorAll('.timeline-item').forEach((el, i) => {
+        el.classList.add('scroll-animate', 'slide-left');
+        el.classList.add('stagger-delay-' + ((i % 4) + 1));
+    });
+    
+    document.querySelectorAll('.education-card').forEach((el, i) => {
+        el.classList.add('scroll-animate', 'rotate-in');
+        el.classList.add('stagger-delay-' + ((i % 2) + 1));
+    });
+    
+    document.querySelectorAll('.cert-item').forEach((el, i) => {
+        el.classList.add('scroll-animate', 'fade-up');
+        el.classList.add('stagger-delay-' + ((i % 4) + 1));
+    });
+    
+    document.querySelectorAll('.contact-item').forEach((el, i) => {
+        el.classList.add('scroll-animate', 'slide-left');
+        el.classList.add('stagger-delay-' + ((i % 3) + 1));
+    });
+    
+    document.querySelectorAll('.contact-form').forEach(el => {
+        el.classList.add('scroll-animate', 'slide-right');
+    });
+    
+    document.querySelectorAll('.stat-card').forEach((el, i) => {
+        el.classList.add('scroll-animate', 'scale-up');
+        el.classList.add('stagger-delay-' + ((i % 3) + 1));
     });
 }
 
-// ===== Section Reveal Animations =====
-const revealSections = document.querySelectorAll('section');
-const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('section-reveal', 'revealed');
-            
-            // Animate children with stagger
-            const staggerChildren = entry.target.querySelectorAll('.stagger-children');
-            staggerChildren.forEach(parent => {
-                parent.classList.add('revealed');
-            });
-            
-            // Animate section titles
-            const title = entry.target.querySelector('.section-title');
-            if (title) {
-                title.style.opacity = '1';
-                title.style.transform = 'translateY(0)';
+// Intersection Observer that triggers animations on EVERY scroll (in and out)
+function setupScrollObserver() {
+    const animatedElements = document.querySelectorAll('.scroll-animate');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Element is in view - animate in
+                entry.target.classList.add('animate-in');
+            } else {
+                // Element is out of view - reset animation so it plays again
+                entry.target.classList.remove('animate-in');
             }
-        }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
     });
-}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    
+    animatedElements.forEach(el => observer.observe(el));
+}
 
-revealSections.forEach(section => {
-    section.classList.add('section-reveal');
-    sectionObserver.observe(section);
-});
+// Initialize animations
+initScrollAnimations();
+setupScrollObserver();
 
 // ===== Dark Mode Toggle =====
 function initTheme() {
