@@ -142,23 +142,13 @@ if (typeof THREE !== 'undefined') {
     });
     
     // Projects section - muted blue/gray
+    // Projects section - muted gray/violet tones  
     create3DBackground('projects-canvas', {
         particleCount: 1200,
         particleSize: 0.035,
         color1: { r: 0.3, g: 0.35, b: 0.5 },  // Steel blue
         color2: { r: 0.25, g: 0.2, b: 0.4 },  // Dark violet
         shapeColors: [0x4a5568, 0x3d4a5c, 0x4a4060, 0x354050]  // Muted grays/blues
-    });
-        shapeColors: [0x1a0a2e, 0x0a1628, 0x150820, 0x0d1520]  // Very dark purples/blues
-    });
-    
-    // Projects section - dark gray/charcoal tones
-    create3DBackground('projects-canvas', {
-        particleCount: 1000,
-        particleSize: 0.02,
-        color1: { r: 0.1, g: 0.1, b: 0.12 },    // Dark charcoal
-        color2: { r: 0.15, g: 0.1, b: 0.18 },   // Dark purple-gray
-        shapeColors: [0x1a1a1f, 0x12121a, 0x18141e, 0x101015]  // Very dark grays
     });
 }
 
