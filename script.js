@@ -7,80 +7,81 @@ const contactForm = document.getElementById('contactForm');
 const themeToggle = document.getElementById('themeToggle');
 const backToTopBtn = document.getElementById('backToTop');
 
-// ===== Three.js 3D Hero Background =====
-const heroCanvas = document.getElementById('hero-canvas');
-if (heroCanvas && typeof THREE !== 'undefined') {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: heroCanvas, alpha: true, antialias: true });
+// ===== Three.js 3D Section Backgrounds =====
+function create3DBackground(canvasId, config) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || typeof THREE === 'undefined') return;
     
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    const section = canvas.parentElement;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, section.offsetWidth / section.offsetHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    
+    renderer.setSize(section.offsetWidth, section.offsetHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
-    // Create particles
+    // Create particles with dark colors
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 2000;
+    const particlesCount = config.particleCount || 1500;
     const posArray = new Float32Array(particlesCount * 3);
     const colorsArray = new Float32Array(particlesCount * 3);
     
     for (let i = 0; i < particlesCount * 3; i += 3) {
-        // Position - spread across a large area
-        posArray[i] = (Math.random() - 0.5) * 15;
-        posArray[i + 1] = (Math.random() - 0.5) * 15;
-        posArray[i + 2] = (Math.random() - 0.5) * 15;
+        posArray[i] = (Math.random() - 0.5) * 20;
+        posArray[i + 1] = (Math.random() - 0.5) * 20;
+        posArray[i + 2] = (Math.random() - 0.5) * 10;
         
-        // Colors - purple to cyan gradient
+        // Dark muted colors
         const t = Math.random();
-        colorsArray[i] = 0.55 + t * 0.02;     // R: purple to cyan
-        colorsArray[i + 1] = 0.36 + t * 0.35; // G
-        colorsArray[i + 2] = 0.96 - t * 0.13; // B
+        colorsArray[i] = config.color1.r + t * (config.color2.r - config.color1.r);
+        colorsArray[i + 1] = config.color1.g + t * (config.color2.g - config.color1.g);
+        colorsArray[i + 2] = config.color1.b + t * (config.color2.b - config.color1.b);
     }
     
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
     
-    // Material with vertex colors
     const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.03,
+        size: config.particleSize || 0.02,
         vertexColors: true,
         transparent: true,
-        opacity: 0.8,
+        opacity: 0.6,
         blending: THREE.AdditiveBlending
     });
     
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
     
-    // Add floating geometric shapes
+    // Add dark wireframe shapes
     const shapes = [];
     const geometries = [
-        new THREE.IcosahedronGeometry(0.3, 0),
-        new THREE.OctahedronGeometry(0.25, 0),
-        new THREE.TetrahedronGeometry(0.3, 0),
-        new THREE.TorusGeometry(0.2, 0.08, 8, 16)
+        new THREE.IcosahedronGeometry(0.4, 0),
+        new THREE.OctahedronGeometry(0.35, 0),
+        new THREE.TetrahedronGeometry(0.4, 0),
+        new THREE.BoxGeometry(0.3, 0.3, 0.3)
     ];
     
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 6; i++) {
         const geometry = geometries[i % geometries.length];
         const material = new THREE.MeshBasicMaterial({
-            color: i % 2 === 0 ? 0x8b5cf6 : 0x06b6d4,
+            color: config.shapeColors[i % config.shapeColors.length],
             wireframe: true,
             transparent: true,
-            opacity: 0.4
+            opacity: 0.15
         });
         const shape = new THREE.Mesh(geometry, material);
         
-        shape.position.x = (Math.random() - 0.5) * 10;
-        shape.position.y = (Math.random() - 0.5) * 10;
+        shape.position.x = (Math.random() - 0.5) * 12;
+        shape.position.y = (Math.random() - 0.5) * 8;
         shape.position.z = (Math.random() - 0.5) * 5 - 3;
         
         shape.userData = {
             rotationSpeed: {
-                x: (Math.random() - 0.5) * 0.02,
-                y: (Math.random() - 0.5) * 0.02,
-                z: (Math.random() - 0.5) * 0.02
+                x: (Math.random() - 0.5) * 0.01,
+                y: (Math.random() - 0.5) * 0.01,
+                z: (Math.random() - 0.5) * 0.01
             },
-            floatSpeed: Math.random() * 0.5 + 0.5,
+            floatSpeed: Math.random() * 0.3 + 0.2,
             floatOffset: Math.random() * Math.PI * 2
         };
         
@@ -88,18 +89,16 @@ if (heroCanvas && typeof THREE !== 'undefined') {
         scene.add(shape);
     }
     
-    camera.position.z = 5;
+    camera.position.z = 6;
     
-    // Mouse tracking for interactivity
     let mouseX = 0, mouseY = 0;
-    let targetX = 0, targetY = 0;
     
-    document.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-        mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    section.addEventListener('mousemove', (e) => {
+        const rect = section.getBoundingClientRect();
+        mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouseY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     });
     
-    // Animation loop
     const clock = new THREE.Clock();
     
     function animate() {
@@ -107,28 +106,15 @@ if (heroCanvas && typeof THREE !== 'undefined') {
         
         const elapsedTime = clock.getElapsedTime();
         
-        // Smooth mouse following
-        targetX += (mouseX - targetX) * 0.05;
-        targetY += (mouseY - targetY) * 0.05;
+        particlesMesh.rotation.x = elapsedTime * 0.03 + mouseY * 0.2;
+        particlesMesh.rotation.y = elapsedTime * 0.05 + mouseX * 0.2;
         
-        // Rotate particles based on mouse and time
-        particlesMesh.rotation.x = elapsedTime * 0.05 + targetY * 0.3;
-        particlesMesh.rotation.y = elapsedTime * 0.08 + targetX * 0.3;
-        
-        // Animate shapes
-        shapes.forEach((shape, i) => {
+        shapes.forEach((shape) => {
             shape.rotation.x += shape.userData.rotationSpeed.x;
             shape.rotation.y += shape.userData.rotationSpeed.y;
             shape.rotation.z += shape.userData.rotationSpeed.z;
-            
-            // Floating motion
-            shape.position.y += Math.sin(elapsedTime * shape.userData.floatSpeed + shape.userData.floatOffset) * 0.002;
+            shape.position.y += Math.sin(elapsedTime * shape.userData.floatSpeed + shape.userData.floatOffset) * 0.001;
         });
-        
-        // Camera subtle movement
-        camera.position.x = targetX * 0.5;
-        camera.position.y = targetY * 0.5;
-        camera.lookAt(scene.position);
         
         renderer.render(scene, camera);
     }
@@ -136,10 +122,32 @@ if (heroCanvas && typeof THREE !== 'undefined') {
     animate();
     
     // Handle resize
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
+    const resizeObserver = new ResizeObserver(() => {
+        camera.aspect = section.offsetWidth / section.offsetHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(section.offsetWidth, section.offsetHeight);
+    });
+    resizeObserver.observe(section);
+}
+
+// Initialize 3D backgrounds for sections with DARK colors
+if (typeof THREE !== 'undefined') {
+    // Skills section - very dark purple/blue tones
+    create3DBackground('skills-canvas', {
+        particleCount: 1200,
+        particleSize: 0.025,
+        color1: { r: 0.15, g: 0.08, b: 0.25 },  // Dark purple
+        color2: { r: 0.08, g: 0.15, b: 0.2 },   // Dark blue
+        shapeColors: [0x1a0a2e, 0x0a1628, 0x150820, 0x0d1520]  // Very dark purples/blues
+    });
+    
+    // Projects section - dark gray/charcoal tones
+    create3DBackground('projects-canvas', {
+        particleCount: 1000,
+        particleSize: 0.02,
+        color1: { r: 0.1, g: 0.1, b: 0.12 },    // Dark charcoal
+        color2: { r: 0.15, g: 0.1, b: 0.18 },   // Dark purple-gray
+        shapeColors: [0x1a1a1f, 0x12121a, 0x18141e, 0x101015]  // Very dark grays
     });
 }
 

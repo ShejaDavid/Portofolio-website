@@ -216,7 +216,8 @@ img {
     overflow: hidden;
 }
 
-#hero-canvas {
+/* ===== 3D Section Canvas ===== */
+.section-canvas {
     position: absolute;
     top: 0;
     left: 0;
@@ -224,6 +225,18 @@ img {
     height: 100%;
     z-index: 0;
     pointer-events: none;
+}
+
+.skills,
+.projects {
+    position: relative;
+    overflow: hidden;
+}
+
+.skills .container,
+.projects .container {
+    position: relative;
+    z-index: 1;
 }
 
 .hero-content {
