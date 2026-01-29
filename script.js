@@ -20,18 +20,18 @@ function create3DBackground(canvasId, config) {
     renderer.setSize(section.offsetWidth, section.offsetHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
-    // Create particles with dark colors
+    // Create particles
     const particlesGeometry = new THREE.BufferGeometry();
     const particlesCount = config.particleCount || 1500;
     const posArray = new Float32Array(particlesCount * 3);
     const colorsArray = new Float32Array(particlesCount * 3);
     
     for (let i = 0; i < particlesCount * 3; i += 3) {
-        posArray[i] = (Math.random() - 0.5) * 20;
-        posArray[i + 1] = (Math.random() - 0.5) * 20;
-        posArray[i + 2] = (Math.random() - 0.5) * 10;
+        posArray[i] = (Math.random() - 0.5) * 15;
+        posArray[i + 1] = (Math.random() - 0.5) * 15;
+        posArray[i + 2] = (Math.random() - 0.5) * 8;
         
-        // Dark muted colors
+        // Colors
         const t = Math.random();
         colorsArray[i] = config.color1.r + t * (config.color2.r - config.color1.r);
         colorsArray[i + 1] = config.color1.g + t * (config.color2.g - config.color1.g);
@@ -42,46 +42,46 @@ function create3DBackground(canvasId, config) {
     particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
     
     const particlesMaterial = new THREE.PointsMaterial({
-        size: config.particleSize || 0.02,
+        size: config.particleSize || 0.04,
         vertexColors: true,
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.9,
         blending: THREE.AdditiveBlending
     });
     
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
     
-    // Add dark wireframe shapes
+    // Add wireframe shapes
     const shapes = [];
     const geometries = [
-        new THREE.IcosahedronGeometry(0.4, 0),
-        new THREE.OctahedronGeometry(0.35, 0),
-        new THREE.TetrahedronGeometry(0.4, 0),
-        new THREE.BoxGeometry(0.3, 0.3, 0.3)
+        new THREE.IcosahedronGeometry(0.5, 0),
+        new THREE.OctahedronGeometry(0.4, 0),
+        new THREE.TetrahedronGeometry(0.5, 0),
+        new THREE.TorusGeometry(0.3, 0.1, 8, 16)
     ];
     
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
         const geometry = geometries[i % geometries.length];
         const material = new THREE.MeshBasicMaterial({
             color: config.shapeColors[i % config.shapeColors.length],
             wireframe: true,
             transparent: true,
-            opacity: 0.15
+            opacity: 0.4
         });
         const shape = new THREE.Mesh(geometry, material);
         
-        shape.position.x = (Math.random() - 0.5) * 12;
-        shape.position.y = (Math.random() - 0.5) * 8;
-        shape.position.z = (Math.random() - 0.5) * 5 - 3;
+        shape.position.x = (Math.random() - 0.5) * 10;
+        shape.position.y = (Math.random() - 0.5) * 6;
+        shape.position.z = (Math.random() - 0.5) * 4 - 2;
         
         shape.userData = {
             rotationSpeed: {
-                x: (Math.random() - 0.5) * 0.01,
-                y: (Math.random() - 0.5) * 0.01,
-                z: (Math.random() - 0.5) * 0.01
+                x: (Math.random() - 0.5) * 0.015,
+                y: (Math.random() - 0.5) * 0.015,
+                z: (Math.random() - 0.5) * 0.015
             },
-            floatSpeed: Math.random() * 0.3 + 0.2,
+            floatSpeed: Math.random() * 0.5 + 0.3,
             floatOffset: Math.random() * Math.PI * 2
         };
         
@@ -89,7 +89,7 @@ function create3DBackground(canvasId, config) {
         scene.add(shape);
     }
     
-    camera.position.z = 6;
+    camera.position.z = 5;
     
     let mouseX = 0, mouseY = 0;
     
@@ -106,14 +106,14 @@ function create3DBackground(canvasId, config) {
         
         const elapsedTime = clock.getElapsedTime();
         
-        particlesMesh.rotation.x = elapsedTime * 0.03 + mouseY * 0.2;
-        particlesMesh.rotation.y = elapsedTime * 0.05 + mouseX * 0.2;
+        particlesMesh.rotation.x = elapsedTime * 0.05 + mouseY * 0.3;
+        particlesMesh.rotation.y = elapsedTime * 0.08 + mouseX * 0.3;
         
         shapes.forEach((shape) => {
             shape.rotation.x += shape.userData.rotationSpeed.x;
             shape.rotation.y += shape.userData.rotationSpeed.y;
             shape.rotation.z += shape.userData.rotationSpeed.z;
-            shape.position.y += Math.sin(elapsedTime * shape.userData.floatSpeed + shape.userData.floatOffset) * 0.001;
+            shape.position.y += Math.sin(elapsedTime * shape.userData.floatSpeed + shape.userData.floatOffset) * 0.002;
         });
         
         renderer.render(scene, camera);
@@ -130,14 +130,25 @@ function create3DBackground(canvasId, config) {
     resizeObserver.observe(section);
 }
 
-// Initialize 3D backgrounds for sections with DARK colors
+// Initialize 3D backgrounds - VISIBLE but dark themed colors
 if (typeof THREE !== 'undefined') {
-    // Skills section - very dark purple/blue tones
+    // Skills section - muted purple/violet
     create3DBackground('skills-canvas', {
+        particleCount: 1500,
+        particleSize: 0.04,
+        color1: { r: 0.4, g: 0.2, b: 0.6 },   // Purple
+        color2: { r: 0.2, g: 0.3, b: 0.5 },   // Dark blue
+        shapeColors: [0x5a3d7a, 0x3d4a6a, 0x4a3060, 0x354055]  // Muted purples/blues
+    });
+    
+    // Projects section - muted blue/gray
+    create3DBackground('projects-canvas', {
         particleCount: 1200,
-        particleSize: 0.025,
-        color1: { r: 0.15, g: 0.08, b: 0.25 },  // Dark purple
-        color2: { r: 0.08, g: 0.15, b: 0.2 },   // Dark blue
+        particleSize: 0.035,
+        color1: { r: 0.3, g: 0.35, b: 0.5 },  // Steel blue
+        color2: { r: 0.25, g: 0.2, b: 0.4 },  // Dark violet
+        shapeColors: [0x4a5568, 0x3d4a5c, 0x4a4060, 0x354050]  // Muted grays/blues
+    });
         shapeColors: [0x1a0a2e, 0x0a1628, 0x150820, 0x0d1520]  // Very dark purples/blues
     });
     
